@@ -4,7 +4,9 @@ A simple command line interface for blocking websites via hosts.
 
 ## Installing hBlock
 
-To install just run `sudo sh install.sh`. You might see an error like `ln: failed to create symbolic link '/usr/bin/python': File exists`. But, this isn't a problem. It just means part of the setup is already complete.
+To install just run `sudo sh install.sh`. You might see an error like `ln: failed to create symbolic link '/usr/bin/python': File exists`. But, this isn't a problem. It just means part of the setup is already complete. Here's a command to do everything at once:
+
+```$ git clone https://github.com/GabePoel/hBlock.git && cd hBlock && sudo sh install.sh && rm ../hBlock -r```
 
 ## Using hBlock
 
@@ -26,6 +28,8 @@ Available commands:
  - setup...................................Automatically sets up hblock on first install.
  - reset...................................Reset hblock to its default state.
  - update..................................Forces update of hosts file.
+ - import [block list] [path]..............Imports block list with specified name.
+ - export [block list] [path]..............Exports block list to specified path.
  - help....................................Shows available commands.
 ```
 For example, let's say you want to set up two block lists. One of them is for social media and the other is for other distracting sites. First you want to rename the default block list from `default` to `distractions`.

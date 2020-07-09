@@ -2,6 +2,7 @@
 import os
 import sys
 import pickle
+import shutil
 import re
 
 usr = os.path.expanduser('/usr')
@@ -15,6 +16,13 @@ def save(object, fp):
 
 def load(fp):
     return pickle.load(open(fp, 'rb'))
+
+def export_block(name, fp):
+    cp = get_cp(name)
+    shutil.copy(cp, fp)
+
+def import_block(name, fp):
+    shutil.copy(fp, base)
 
 def get_activity():
     return load(act)
@@ -252,6 +260,16 @@ try:
     elif command[0] == 'disable':
         disable()
         print('All ' + str(len(get_activity().keys())) + ' block lists disabled.')
+    elif command[0] == 'import':
+        name = command[1]
+        fp = command[2]
+        import_block(name, fp)
+        print('Imported ' + name + ' from ' + fp + '.')
+    elif command[0] == 'export':
+        name = command[1]
+        fp = command[2]
+        export_block(name, fp)
+        print('Exported ' + name + ' to ' + fp + '.')
     elif command[0] == 'help':
         print(
             'Available commands:\n' +
@@ -269,6 +287,8 @@ try:
             ' - setup...................................Automatically sets up hblock on first install.\n' +
             ' - reset...................................Reset hblock to its default state.\n' +
             ' - update..................................Forces update of hosts file.\n' +
+            ' - import [block list] [path]..............Imports block list with specified name.\n' +
+            ' - export [block list] [path]..............Exports block list to specified path.\n' +``
             ' - help....................................Shows available commands.'
         )
     else:
