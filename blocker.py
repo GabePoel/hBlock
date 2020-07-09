@@ -143,6 +143,7 @@ def update_block(name):
     cp = get_cp(name)
     domains = load(cp)
     new_block(name, domains)
+    update_hosts()
 
 def set_active(name, on):
     activity = get_activity()
