@@ -2,11 +2,11 @@
 
 A simple command line interface for blocking websites via hosts.
 
-## Installation
+## Installing hBlock
 
 To install just run `sudo sh install.sh`. You might see an error like `ln: failed to create symbolic link '/usr/bin/python': File exists`. But, this isn't a problem. It just means part of the setup is already complete.
 
-## Using
+## Using hBlock
 
 Unfortinately, hblock always needs to be run as root. Don't worry. It doesn't do anything scary. It just needs to always be able to edit your hosts file. (Okay that's a _little_ bit scary. But, not sooooo bad.) You can see all the basic commands by running `sudo hblock help` which should show something like the following.
 
