@@ -26,6 +26,7 @@ def import_block(name, fp):
     activites = get_activity()
     activites[name] = False
     save(activites, act)
+    update_block(name)
 
 def get_activity():
     return load(act)
@@ -144,7 +145,7 @@ def update_block(name):
     new_block(name, domains)
 
 def set_active(name, on):
-    activity = load(act)
+    activity = get_activity()
     activity[name] = on
     save(activity, act)
     update_hosts()
