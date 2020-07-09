@@ -23,6 +23,9 @@ def export_block(name, fp):
 
 def import_block(name, fp):
     shutil.copy(fp, base)
+    activites = get_activity()
+    activites[name] = False
+    save(activites, act)
 
 def get_activity():
     return load(act)
@@ -288,7 +291,7 @@ try:
             ' - reset...................................Reset hblock to its default state.\n' +
             ' - update..................................Forces update of hosts file.\n' +
             ' - import [block list] [path]..............Imports block list with specified name.\n' +
-            ' - export [block list] [path]..............Exports block list to specified path.\n' +``
+            ' - export [block list] [path]..............Exports block list to specified path.\n' +
             ' - help....................................Shows available commands.'
         )
     else:
