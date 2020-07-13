@@ -199,7 +199,7 @@ def new_block(name, domains):
         cp = get_cp(name)
         save(set(domains), cp)
         activity = get_activity()
-        activity[name] = False
+        # activity[name] = False
         save(activity, act)
 
 def delete_block(name):
