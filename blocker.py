@@ -336,7 +336,7 @@ def commands():
         name = command[1]
         add_domains = command[2:]
         add_to_block(name, add_domains)
-        print('Added ' + str(len(add_domains)) + ' domains to ' + name + '.')
+        print('Added ' + plural(len(add_domains), 'domain') + ' to ' + name + '.')
     elif command[0] == 'remove':
         name = command[1]
         rem_domains = command[2:]
