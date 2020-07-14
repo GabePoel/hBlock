@@ -385,14 +385,13 @@ def commands():
     elif command[0] == 'set':
         name = command[1]
         to_enable = command[2]
-        if require_keyword('Are you sure you want to turn ' + name + ' ' + to_enable + '? '):
-            if to_enable == 'on':
-                to_enable = True
-                print('Enabling ' + name + '.')
-            else:
-                to_enable = False
-                print('Disabling ' + name + '.')
-            set_active(name, enable)
+        if to_enable == 'on':
+            to_enable = True
+            print('Enabling ' + name + '.')
+        elif require_keyword('Are you sure you want to turn ' + name + ' ' + to_enable + '? '):
+            to_enable = False
+            print('Disabling ' + name + '.')
+        set_active(name, to_enable)
     elif command[0] == 'new':
         name = command[1]
         domains = command[2:]
