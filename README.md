@@ -6,7 +6,7 @@ A simple command line interface for blocking websites via hosts.
 
 To install just run `sudo sh install.sh`. You might see an error like `ln: failed to create symbolic link '/usr/bin/python': File exists`. But, this isn't a problem. It just means part of the setup is already complete. Here's a command to do everything at once:
 
-```$ git clone https://github.com/GabePoel/hBlock.git && cd hBlock && sudo sh install.sh && rm ../hBlock -r```
+```$ git clone https://github.com/GabePoel/hBlock.git && cd hBlock && sudo sh install.sh && sudo rm ../hBlock -r```
 
 ## Using hBlock
 
