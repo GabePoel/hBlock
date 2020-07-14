@@ -449,7 +449,7 @@ def commands():
             load_default()
             print('Loaded default profile.')
     elif command[0] == 'save':
-        if require_keyword('Are you sure you want to save your current prfile as the default? '):
+        if require_keyword('Are you sure you want to save your current profile as the default? '):
             save_default()
             print('Saved default profile.')
     elif command[0] == 'refresh':
