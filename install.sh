@@ -1,6 +1,7 @@
 #!/bin/bash
-cp ./hblock /home/*/.local/bin/hblock
-cp ./hblock /usr/local/bin/hblock
+CWD=$(pwd)
+cp $CWD/hblock /home/*/.local/bin/
+sudo cp $CWD/hblock /usr/local/bin/
 chmod +x /home/*/.local/bin/hblock
 chmod +x /usr/local/bin/hblock
 { # try
