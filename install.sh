@@ -9,4 +9,4 @@ sudo chmod +x /usr/local/bin/hblock
 } || {
     echo "Python already set up."
 }
-sudo hblock setup
+hblock setup
