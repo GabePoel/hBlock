@@ -328,9 +328,9 @@ def see_block(name):
         domains = load(cp)
         active = get_activity()
         if active[name]:
-            status = 'Enabled'
+            status = 'Blocked'
         else:
-            status = 'Disabled'
+            status = 'Unblocked'
         print('Domains in ' + str(name) + ' [' + status + ']:')
         for domain in domains:
             print(' - ' + str(domain))
@@ -382,9 +382,9 @@ def see_active(search='*'):
     for name in results:
         space = 40 - len(name)
         if activity[name]:
-            blocking = 'Enabled'
+            blocking = 'Blocked'
         else:
-            blocking = 'Disabled'
+            blocking = 'Unblocked'
         print(' - ' + name + space * '.' + blocking)
 
 def enable():
