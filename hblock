@@ -71,7 +71,7 @@ def check_time(message=True):
     if free:
         return free
     elif message:
-        print('Cannot complete operation. You have locked hBlock until ' + str(datetime.datetime.now()) + '. Try again then.')
+        print('Cannot complete operation. Blocks are locked until ' + str(datetime.datetime.now()) + '. Try again then.')
         return free
     else:
         return free
@@ -435,7 +435,7 @@ def lock(m, h, d):
     save_time(unlock_time)
 
 def when_unlock():
-    if check_time():
+    if check_time(False):
         print('There is no time lock on hBlock.')
     else:
         unlock = get_unlock()
@@ -570,7 +570,7 @@ def commands():
             if require_keyword('Are you sure you want to reset your default profile? '):
                 reset_default()
                 print('Reset default profile.')
-    elif command[0] == 'time':
+    elif command[0] == 'time' or command[0] == '-t':
         when_unlock()
     elif command[0] == 'keyword':
         pw = command[1]
