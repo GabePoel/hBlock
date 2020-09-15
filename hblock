@@ -439,7 +439,7 @@ def when_unlock():
         print('There is no time lock on hBlock.')
     else:
         unlock = get_unlock()
-        print('You have set hBlock to unlock at ' + str(unlock) + '.')
+        print('Blocks to unlock at ' + str(unlock) + '.')
         print('The current time is ' + str(datetime.datetime.now()) + '.')
 
 command = sys.argv[1:]
@@ -554,6 +554,7 @@ def commands():
             else:
                 m = 0
             lock(m, h, d)
+            print('Locking until ' + str(get_unlock()) + '.')
     elif command[0] == 'load' or command[0] == '-l':
         if check_time():
             if check_block(get_default()) or require_keyword('Are you sure you want to load your default profile? '):
