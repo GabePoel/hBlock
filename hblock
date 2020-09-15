@@ -6,6 +6,7 @@ import pickle
 import shutil
 import random
 import re
+import datetime
 
 home = os.path.expanduser('~')
 usr = os.path.expanduser('/usr')
@@ -15,6 +16,7 @@ base = os.path.join(home, '.config', 'blocker')
 act = os.path.join(base, 'act.pkl')
 defs = os.path.join(base, 'def.pkl')
 pas = os.path.join(base, 'pas.pkl')
+tim = os.path.join(base, 'tim.pkl')
 wp = os.path.join(usr, 'local', 'bin', 'block-keywords')
 debug = False
 
@@ -50,6 +52,29 @@ def check_name(name):
             print('Name ' + name + ' uses invalid characters. Please try something else.')
             return False
     return True
+
+def get_unlock():
+    try:
+        load(tim)
+    except:
+        save_time()
+    return load(tim)
+
+def save_time(time=None):
+    if time is None:
+        time = datetime.datetime.now()
+    save(time, tim)
+
+def check_time(message=True):
+    unlock = get_unlock()
+    free = datetime.datetime.now() > unlock
+    if free:
+        return free
+    elif message:
+        print('Cannot complete operation. You have locked hBlock until ' + str(datetime.datetime.now()) + '. Try again then.')
+        return free
+    else:
+        return free
 
 def plural(number, word):
     if number == 1:
@@ -403,6 +428,20 @@ def root_updater(act_path):
     hosts.write(h_string)
     hosts.close()
 
+def lock(m, h, d):
+    delta = datetime.timedelta(minutes=m, hours=h, days=d)
+    now = datetime.datetime.now()
+    unlock_time = now + delta
+    save_time(unlock_time)
+
+def when_unlock():
+    if check_time():
+        print('There is no time lock on hBlock.')
+    else:
+        unlock = get_unlock()
+        print('You have set hBlock to unlock at ' + str(unlock) + '.')
+        print('The current time is ' + str(datetime.datetime.now()) + '.')
+
 command = sys.argv[1:]
 def commands():
     if command[0] == 'active' or command[0] == '-a':
@@ -416,11 +455,12 @@ def commands():
         add_to_block(name, add_domains)
         print('Added ' + plural(len(expand_domains(add_domains)), 'domain') + ' to ' + name + '.')
     elif command[0] == 'remove' or command[0] == '-r':
-        name = command[1]
-        rem_domains = command[2:]
-        if require_keyword('Are you sure you want to remove ' + plural(len(expand_domains(rem_domains)), 'domain') + ' from ' + name + '? '):
-            rem_from_block(name, rem_domains)
-            print('Removed ' + plural(len(rem_domains), 'domain') + ' from ' + name + '.')
+        if check_time():
+            name = command[1]
+            rem_domains = command[2:]
+            if require_keyword('Are you sure you want to remove ' + plural(len(expand_domains(rem_domains)), 'domain') + ' from ' + name + '? '):
+                rem_from_block(name, rem_domains)
+                print('Removed ' + plural(len(rem_domains), 'domain') + ' from ' + name + '.')
     elif command[0] == 'show' or command[0] == '-s':
         if command[1] == 'all' or command[1] == '*':
             see_all()
@@ -435,7 +475,7 @@ def commands():
         if to_enable == 'on':
             to_enable = True
             print('Blocking ' + name + '.')
-        elif require_keyword('Are you sure you want to turn blocking of ' + name + ' ' + to_enable + '? '):
+        elif check_time() and require_keyword('Are you sure you want to turn blocking of ' + name + ' ' + to_enable + '? '):
             to_enable = False
             print('Unblocking ' + name + '.')
         set_active(name, to_enable)
@@ -445,44 +485,51 @@ def commands():
         new_block(name, domains)
         print('Created ' + name + ' with ' + plural(len(expand_domains(domains)), 'domain') + ' in it.')
     elif command[0] == 'delete' or command[0] == '-d':
-        name = command[1]
-        if require_keyword('Are you sure you want to delete ' + name + '? '):
-            print('Deleting ' + name + '.')
-            delete_block(name)
+        if check_time():
+            name = command[1]
+            if require_keyword('Are you sure you want to delete ' + name + '? '):
+                print('Deleting ' + name + '.')
+                delete_block(name)
     elif command[0] == 'rename':
-        old_name = command[1]
-        new_name = command[2]
-        if require_keyword('Are you sure you want to rename ' + old_name + ' to ' + new_name + '? '):
-            rename_block(old_name, new_name)
-            print('Renamed ' + old_name + ' to ' + new_name + '.')
+        if check_time():
+            old_name = command[1]
+            new_name = command[2]
+            if require_keyword('Are you sure you want to rename ' + old_name + ' to ' + new_name + '? '):
+                rename_block(old_name, new_name)
+                print('Renamed ' + old_name + ' to ' + new_name + '.')
     elif command[0] == 'setup':
         print('Attempting setup.')
         setup()
         print('Setup complete.')
     elif command[0] == 'reset':
-        if require_keyword('Are you sure you want to reset your entire hBlock profile? '):
-            print('Attempting reset.')
-            reset()
-            print('Reset complete.')
+        if check_time:
+            if require_keyword('Are you sure you want to reset your entire hBlock profile? '):
+                print('Attempting reset.')
+                reset()
+                print('Reset complete.')
     elif command[0] == 'update' or command[0] == '-u':
-        print('Forcing update of hosts.')
-        update_hosts()
-        print('Update of hosts complete.')
+        if check_time:
+            print('Forcing update of hosts.')
+            update_hosts()
+            print('Update of hosts complete.')
     elif command[0] == 'enable':
-        enable()
-        print('Enabled ' + plural(len(get_activity().keys()), 'block list') + '.')
+        if check_time:
+            enable()
+            print('Enabled ' + plural(len(get_activity().keys()), 'block list') + '.')
     elif command[0] == 'disable':
-        if require_keyword('Are you sure you want to disable ' + plural(len(get_activity().keys()), 'block list') + '? '):
-            disable()
-            print('Disabled ' + plural(len(get_activity().keys()), 'block list') + '.')
+        if check_time():
+            if require_keyword('Are you sure you want to disable ' + plural(len(get_activity().keys()), 'block list') + '? '):
+                disable()
+                print('Disabled ' + plural(len(get_activity().keys()), 'block list') + '.')
     elif command[0] == 'import' or command[0] == '-i':
-        name = command[1]
-        fp = command[2]
-        if name == 'profile':
-            import_all(fp)
-        else:
-            import_block(name, fp)
-        print('Imported ' + name + ' from ' + fp + '.')
+        if check_time():
+            name = command[1]
+            fp = command[2]
+            if name == 'profile':
+                import_all(fp)
+            else:
+                import_block(name, fp)
+            print('Imported ' + name + ' from ' + fp + '.')
     elif command[0] == 'export':
         name = command[1]
         fp = command[2]
@@ -491,24 +538,46 @@ def commands():
         else:
             export_block(name, fp)
         print('Exported ' + name + ' to ' + fp + '.')
+    elif command[0] == 'lock':
+        if check_time():
+            time = command[1:]
+            if 'd' in time:
+                d = int(time[time.index('d') - 1])
+            else:
+                d = 0
+            if 'h' in time:
+                h = int(time[time.index('h') - 1])
+            else:
+                h = 0
+            if 'm' in time:
+                m = int(time[time.index('m') - 1])
+            else:
+                m = 0
+            lock(m, h, d)
     elif command[0] == 'load' or command[0] == '-l':
-        if check_block(get_default()) or require_keyword('Are you sure you want to load your default profile? '):
-            load_default()
-            print('Loaded default profile.')
+        if check_time():
+            if check_block(get_default()) or require_keyword('Are you sure you want to load your default profile? '):
+                load_default()
+                print('Loaded default profile.')
     elif command[0] == 'save':
-        if require_keyword('Are you sure you want to save your current profile as the default? '):
-            save_default()
-            print('Saved default profile.')
+        if check_time():
+            if require_keyword('Are you sure you want to save your current profile as the default? '):
+                save_default()
+                print('Saved default profile.')
     elif command[0] == 'refresh':
-        if require_keyword('Are you sure you want to reset your default profile? '):
-            reset_default()
-            print('Reset default profile.')
+        if check_time():
+            if require_keyword('Are you sure you want to reset your default profile? '):
+                reset_default()
+                print('Reset default profile.')
+    elif command[0] == 'time':
+        when_unlock()
     elif command[0] == 'keyword':
         pw = command[1]
         set_keyword(pw)
     elif command[0] == 'root-update':
-        fp = command[1]
-        root_updater(fp)
+        if check_time():
+            fp = command[1]
+            root_updater(fp)
     elif command[0] == 'help' or command[0] == '-h':
         print(
             'Available commands:\n' +
@@ -525,7 +594,9 @@ def commands():
             ' - rename [block list] [new name]..........Renames block list to the new name.\n' +
             ' - save....................................Saves current activity as default profile.\n' +
             ' - load....................................Loads default profile to current activity.\n' +
+            " - lock [number] [m/h/d]...................Locks current profile so it can't be changed for specified time.\n" +
             " - keyword.................................Sets unblock keyword. Use 'random' or an integer to have it be different every time.\n" +
+            ' - time....................................See when hBlock is scheduled to unlock.\n' +
             ' - setup...................................Automatically sets up hblock on first install.\n' +
             ' - reset...................................Reset hblock to its default state.\n' +
             ' - update..................................Forces update of hosts file.\n' +
