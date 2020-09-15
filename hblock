@@ -596,14 +596,18 @@ def commands():
             ' - rename [block list] [new name]..........Renames block list to the new name.\n' +
             ' - save....................................Saves current activity as default profile.\n' +
             ' - load....................................Loads default profile to current activity.\n' +
-            " - lock [number] [m/h/d]...................Locks current profile so it can't be changed for specified time.\n" +
-            " - keyword.................................Sets unblock keyword. Use 'random' or an integer to have it be different every time.\n" +
+            " - lock [number] [m/h/d]...................Locks current profile so it can't be changed for\n" +
+            "                                           specified time.\n" +
+            " - keyword.................................Sets unblock keyword. Use 'random' or an integer to\n" + 
+            "                                           have it be different every time.\n" +
             ' - time....................................See when hBlock is scheduled to unlock.\n' +
             ' - setup...................................Automatically sets up hblock on first install.\n' +
             ' - reset...................................Reset hblock to its default state.\n' +
             ' - update..................................Forces update of hosts file.\n' +
-            " - import [block list] [path]..............Imports block list with specified name Use 'profile' to import everything.\n" +
-            " - export [block list] [path]..............Exports block list to specified path. Use 'profile' to export everything.\n" +
+            " - import [block list] [path]..............Imports block list with specified name Use 'profile'\n" + 
+            "                                           to import everything.\n" +
+            " - export [block list] [path]..............Exports block list to specified path. Use 'profile'\n" + 
+            "                                           to export everything.\n" +
             ' - help....................................Shows available commands.'
         )
     else:
