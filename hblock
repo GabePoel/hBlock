@@ -65,9 +65,11 @@ def save_time(time=None):
         time = datetime.datetime.now()
     save(time, tim)
 
-def check_time(message=True):
+def check_time(message=True, time=None):
     unlock = get_unlock()
-    free = datetime.datetime.now() > unlock
+    if time is None:
+        time = datetime.datetime.now()
+    free = time > unlock
     if free:
         return free
     elif message:
@@ -432,10 +434,11 @@ def lock(m, h, d):
     delta = datetime.timedelta(minutes=m, hours=h, days=d)
     now = datetime.datetime.now()
     unlock_time = now + delta
-    save_time(unlock_time)
+    if check_time(time=unlock_time):
+        save_time(unlock_time)
 
 def when_unlock():
-    if check_time(False):
+    if check_time(message=False):
         print('There is no time lock on hBlock.')
     else:
         unlock = get_unlock()
@@ -540,27 +543,25 @@ def commands():
             export_block(name, fp)
         print('Exported ' + name + ' to ' + fp + '.')
     elif command[0] == 'lock':
-        if check_time():
-            time = command[1:]
-            if 'd' in time:
-                d = int(time[time.index('d') - 1])
-            else:
-                d = 0
-            if 'h' in time:
-                h = int(time[time.index('h') - 1])
-            else:
-                h = 0
-            if 'm' in time:
-                m = int(time[time.index('m') - 1])
-            else:
-                m = 0
-            lock(m, h, d)
-            print('Locking until ' + str(get_unlock()) + '.')
+        time = command[1:]
+        if 'd' in time:
+            d = int(time[time.index('d') - 1])
+        else:
+            d = 0
+        if 'h' in time:
+            h = int(time[time.index('h') - 1])
+        else:
+            h = 0
+        if 'm' in time:
+            m = int(time[time.index('m') - 1])
+        else:
+            m = 0
+        lock(m, h, d)
+        print('Locking until ' + str(get_unlock()) + '.')
     elif command[0] == 'load' or command[0] == '-l':
-        if check_time():
-            if check_block(get_default()) or require_keyword('Are you sure you want to load your default profile? '):
-                load_default()
-                print('Loaded default profile.')
+        if check_block(get_default()) or require_keyword('Are you sure you want to load your default profile? '):
+            load_default()
+            print('Loaded default profile.')
     elif command[0] == 'save':
         if check_time():
             if require_keyword('Are you sure you want to save your current profile as the default? '):
