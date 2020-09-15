@@ -475,10 +475,11 @@ def commands():
         if to_enable == 'on':
             to_enable = True
             print('Blocking ' + name + '.')
+            set_active(name, to_enable)
         elif check_time() and require_keyword('Are you sure you want to turn blocking of ' + name + ' ' + to_enable + '? '):
             to_enable = False
             print('Unblocking ' + name + '.')
-        set_active(name, to_enable)
+            set_active(name, to_enable)
     elif command[0] == 'new' or command[0] == '-n':
         name = command[1]
         domains = expand_domains(command[2:])
