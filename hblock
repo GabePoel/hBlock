@@ -7,6 +7,7 @@ import shutil
 import random
 import re
 import datetime
+from os import system
 
 home = os.path.expanduser('~')
 usr = os.path.expanduser('/usr')
@@ -18,6 +19,8 @@ defs = os.path.join(base, 'def.pkl')
 pas = os.path.join(base, 'pas.pkl')
 tim = os.path.join(base, 'tim.pkl')
 wp = os.path.join(usr, 'local', 'bin', 'block-keywords')
+root_base = os.path.join(usr, 'share', 'hBlock')
+root_act = os.path.join(root_base, 'act.pkl')
 debug = False
 
 reserved = {'profile', '*', 'all'}
@@ -84,6 +87,13 @@ def plural(number, word):
     else:
         return str(number) + ' ' + word + 's'
 
+def root_refresh():
+    fps = os.listdir(base)
+    for p in fps:
+        fp = os.path.join(base, p)
+        rp = os.path.join(root_base, p)
+        system('sudo cp ' + fp + ' ' + rp)
+
 def check_block(block_dict):
     activity = get_activity()
     okay = True
@@ -97,6 +107,8 @@ def check_block(block_dict):
 
 def save(object, fp):
     pickle.dump(object, open(fp, 'wb'))
+    root_path = os.path.join(root_base, os.path.basename(fp))
+    system('sudo cp ' + fp + ' ' + root_path)
 
 def load(fp):
     return pickle.load(open(fp, 'rb'))
@@ -110,6 +122,7 @@ def import_block(name, fp):
     activites = get_activity()
     activites[name] = False
     save(activites, act)
+    system('sudo cp ' + act + ' ' + root_act)
     update_block(name)
 
 def export_all(fp):
@@ -243,6 +256,7 @@ def check_base():
     if not os.path.exists(act):
         activity = {'default':False}
         save(activity, act)
+        system('sudo cp ' + act + ' ' + root_act)
         new_block('default', [])
 
 def setup():
@@ -277,6 +291,7 @@ def new_block(name, domains):
         if not name in activity.keys():
             activity[name] = False
         save(activity, act)
+        system('sudo cp ' + act + ' ' + root_act)
 
 def delete_block(name):
     if check_name(name):
@@ -287,6 +302,7 @@ def delete_block(name):
         activity = get_activity()
         activity.pop(name)
         save(activity, act)
+        system('sudo cp ' + act + ' ' + root_act)
 
 def expand_domains(add_domains):
         activity = get_activity()
@@ -356,6 +372,7 @@ def rename_block(old_name, new_name):
         activity[new_name] = activity[old_name]
         activity.pop(old_name)
         save(activity, act)
+        system('sudo cp ' + act + ' ' + root_act)
 
 def update_block(name):
     if check_name(name):
@@ -372,6 +389,7 @@ def set_active(name, on):
         activity = get_activity()
         activity[name] = on
         save(activity, act)
+        system('sudo cp ' + act + ' ' + root_act)
         update_block(name)
 
 def see_active(search='*'):
@@ -578,9 +596,13 @@ def commands():
         pw = command[1]
         set_keyword(pw)
     elif command[0] == 'root-update':
-        if check_time():
-            fp = command[1]
-            root_updater(fp)
+        fp = command[1]
+        root_updater(fp)
+    elif command[0] == 'root-direct':
+        fp = root_act
+        root_updater(root_act)
+    elif command[0] == 'root-refresh':
+        root_refresh()
     elif command[0] == 'help' or command[0] == '-h':
         print(
             'Available commands:\n' +

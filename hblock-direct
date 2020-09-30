@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Run root updating command.
+echo 'attempting update'
+/usr/local/bin/hblock root-direct --debug
+echo 'update worked'
