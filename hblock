@@ -551,6 +551,7 @@ def commands():
                 import_all(fp)
             else:
                 import_block(name, fp)
+            root_refresh()
             print('Imported ' + name + ' from ' + fp + '.')
     elif command[0] == 'export':
         name = command[1]
@@ -634,7 +635,8 @@ def commands():
             ' - help....................................Shows available commands.'
         )
     else:
-        print("Invalid command. Try entering 'sudo hblock help' to see available commands.")
+        print("Invalid command. Try entering 'hblock help' to see available commands.\n" +
+        "If you think you entered a valid command, try running with the '--debug' flag at the end.")
 if command[-1] == '--debug':
     debug = True
     command = command[:-1]
@@ -644,4 +646,5 @@ else:
     try:
         commands()
     except:
-        print("Invalid command. Try entering 'sudo hblock help' to see available commands.")
+        print("Invalid command. Try entering 'hblock help' to see available commands.\n" +
+        "If you think you entered a valid command, try running with the '--debug' flag at the end.")
