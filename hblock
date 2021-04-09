@@ -25,10 +25,72 @@ debug = False
 
 reserved = {'profile', '*', 'all'}
 allowed = {
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '1', '2', '3', '4', '5', '6', '7', '8', '9,', '0', '-', '_', ' '
-}
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9,',
+    '0',
+    '-',
+    '_',
+    ' '}
+
 
 def import_list(fp):
     f = open(fp, 'r')
@@ -36,7 +98,9 @@ def import_list(fp):
     f.close()
     return l
 
+
 words = import_list(wp)
+
 
 def get_words(n=1):
     string = ''
@@ -46,27 +110,34 @@ def get_words(n=1):
     string = string[:-1]
     return string
 
+
 def check_name(name):
     if name in reserved:
         print('Name ' + name + ' is reserved. Please try something else.')
         return False
     for c in name:
-        if not c in allowed:
-            print('Name ' + name + ' uses invalid characters. Please try something else.')
+        if c not in allowed:
+            print(
+                'Name ' +
+                name +
+                ' uses invalid characters. Please try something else.')
             return False
     return True
+
 
 def get_unlock():
     try:
         load(tim)
-    except:
+    except BaseException:
         save_time()
     return load(tim)
+
 
 def save_time(time=None):
     if time is None:
         time = datetime.datetime.now()
     save(time, tim)
+
 
 def check_time(message=True, time=None):
     unlock = get_unlock()
@@ -76,16 +147,19 @@ def check_time(message=True, time=None):
     if free:
         return free
     elif message:
-        print('Cannot complete operation. Blocks are locked until ' + str(datetime.datetime.now()) + '. Try again then.')
+        print('Cannot complete operation. Blocks are locked until ' +
+              str(datetime.datetime.now()) + '. Try again then.')
         return free
     else:
         return free
+
 
 def plural(number, word):
     if number == 1:
         return str(number) + ' ' + word
     else:
         return str(number) + ' ' + word + 's'
+
 
 def root_refresh():
     fps = os.listdir(base)
@@ -94,6 +168,7 @@ def root_refresh():
         rp = os.path.join(root_base, p)
         system('sudo cp ' + fp + ' ' + rp)
 
+
 def check_block(block_dict):
     activity = get_activity()
     okay = True
@@ -101,21 +176,25 @@ def check_block(block_dict):
         try:
             if activity[block] and not block_dict[block]:
                 okay = False
-        except:
+        except BaseException:
             pass
     return okay
+
 
 def save(object, fp):
     pickle.dump(object, open(fp, 'wb'))
     root_path = os.path.join(root_base, os.path.basename(fp))
     system('sudo cp ' + fp + ' ' + root_path)
 
+
 def load(fp):
     return pickle.load(open(fp, 'rb'))
+
 
 def export_block(name, fp):
     cp = get_cp(name)
     shutil.copy(cp, fp)
+
 
 def import_block(name, fp):
     shutil.copy(fp, base)
@@ -125,17 +204,18 @@ def import_block(name, fp):
     system('sudo cp ' + act + ' ' + root_act)
     update_block(name)
 
+
 def export_all(fp):
     new_base = os.path.join(base, 'blocker')
     try:
         shutil.rmtree(new_base)
-    except:
+    except BaseException:
         pass
     shutil.copytree(base, new_base)
     zipped_profile = os.path.join(base, 'hBlock_profile')
     try:
         os.remove(zipped_profile + '.zip')
-    except:
+    except BaseException:
         pass
     shutil.make_archive(zipped_profile, 'zip', new_base)
     zipped_profile += '.zip'
@@ -143,16 +223,19 @@ def export_all(fp):
     shutil.move(zipped_profile, fp)
     shutil.rmtree(new_base)
 
+
 def import_all(fp):
     shutil.unpack_archive(fp, base)
     zipped_profile = os.path.join(base, 'hBlock_profile.zip')
     try:
         os.remove(zipped_profile)
-    except:
+    except BaseException:
         pass
+
 
 def get_activity():
     return load(act)
+
 
 def get_default():
     if not os.path.exists(defs):
@@ -162,8 +245,10 @@ def get_default():
         default = load(defs)
     return default
 
+
 def get_keyword():
     return load(pas)
+
 
 def set_keyword(kw):
     if not os.path.exists(pas):
@@ -179,6 +264,7 @@ def set_keyword(kw):
         else:
             print("Unblock keyword word unchanged.")
 
+
 def require_keyword(message='', false_message='Operation canceled.'):
     if not os.path.exists(pas):
         return True
@@ -191,15 +277,20 @@ def require_keyword(message='', false_message='Operation canceled.'):
         try:
             kn = int(kw)
             kw = get_words(kn)
-        except:
+        except BaseException:
             pass
-        kw_check = input(message + "Enter '" + kw + "' to continue. Enter anything else to cancel.\n")
+        kw_check = input(
+            message +
+            "Enter '" +
+            kw +
+            "' to continue. Enter anything else to cancel.\n")
         if kw == kw_check:
             return True
         else:
-            if not false_message is None:
+            if false_message is not None:
                 print(false_message)
             return False
+
 
 def save_default():
     activity = get_activity()
@@ -211,6 +302,7 @@ def save_default():
             default[name] = activity[name]
         save(default, defs)
 
+
 def load_default():
     activity = get_activity()
     default = get_default()
@@ -218,10 +310,13 @@ def load_default():
     for name in activity.keys():
         try:
             set_active(name, default[name])
-        except:
+        except BaseException:
             could_not_set.append(name)
     if len(could_not_set) == 1:
-        print("Block list '" + could_not_set[0] + "' was not in defaults. Run 'hblock save' to add it now.")
+        print(
+            "Block list '" +
+            could_not_set[0] +
+            "' was not in defaults. Run 'hblock save' to add it now.")
     elif len(could_not_set) > 1:
         s = 'Block lists '
         for name in could_not_set[:-1]:
@@ -230,8 +325,10 @@ def load_default():
         s += " were not in defaults. Run 'hblock save' to add them now."
         print(s)
 
+
 def reset_default():
     os.remove(defs)
+
 
 def get_bp(name, root=False, act_path=None):
     new_base = base
@@ -240,6 +337,7 @@ def get_bp(name, root=False, act_path=None):
     if check_name(name):
         return os.path.join(new_base, name + '.block')
 
+
 def get_cp(name, root=False, act_path=None):
     new_base = base
     if root:
@@ -247,24 +345,29 @@ def get_cp(name, root=False, act_path=None):
     if check_name(name):
         return os.path.join(new_base, name + '.cont')
 
+
 def check_dir(fp):
     if not os.path.exists(fp):
         os.makedirs(fp)
 
+
 def check_base():
     check_dir(base)
     if not os.path.exists(act):
-        activity = {'default':False}
+        activity = {'default': False}
         save(activity, act)
         system('sudo cp ' + act + ' ' + root_act)
         new_block('default', [])
 
+
 def setup():
     check_base()
+
 
 def reset():
     os.system('rm -rf ' + str(base))
     setup()
+
 
 def new_string(name, domains):
     if check_name(name):
@@ -277,6 +380,7 @@ def new_string(name, domains):
         block_string += footer + '\n'
         return block_string
 
+
 def new_block(name, domains):
     if check_name(name):
         block_string = new_string(name, domains)
@@ -288,10 +392,11 @@ def new_block(name, domains):
         cp = get_cp(name)
         save(set(domains), cp)
         activity = get_activity()
-        if not name in activity.keys():
+        if name not in activity.keys():
             activity[name] = False
         save(activity, act)
         system('sudo cp ' + act + ' ' + root_act)
+
 
 def delete_block(name):
     if check_name(name):
@@ -304,17 +409,19 @@ def delete_block(name):
         save(activity, act)
         system('sudo cp ' + act + ' ' + root_act)
 
+
 def expand_domains(add_domains):
-        activity = get_activity()
-        cur_domains = set(add_domains)
-        add_domains = set(add_domains)
-        for domain in cur_domains:
-            if domain in activity.keys():
-                add_domains = add_domains - {domain}
-                new_cp = get_cp(domain)
-                domains = load(new_cp)
-                add_domains = add_domains | domains
-        return add_domains
+    activity = get_activity()
+    cur_domains = set(add_domains)
+    add_domains = set(add_domains)
+    for domain in cur_domains:
+        if domain in activity.keys():
+            add_domains = add_domains - {domain}
+            new_cp = get_cp(domain)
+            domains = load(new_cp)
+            add_domains = add_domains | domains
+    return add_domains
+
 
 def add_to_block(name, add_domains):
     if check_name(name):
@@ -325,6 +432,7 @@ def add_to_block(name, add_domains):
         save(new_domains, cp)
         update_block(name)
 
+
 def rem_from_block(name, rem_domains):
     if check_name(name):
         cp = get_cp(name)
@@ -334,11 +442,13 @@ def rem_from_block(name, rem_domains):
         save(new_domains, cp)
         update_block(name)
 
+
 def clear_block(name):
     if check_name(name):
         cp = get_cp(name)
         save(set(), cp)
         update_block(name)
+
 
 def see_block(name):
     if check_name(name):
@@ -353,10 +463,12 @@ def see_block(name):
         for domain in domains:
             print(' - ' + str(domain))
 
+
 def see_all():
     active = get_activity()
     for name in active.keys():
         see_block(name)
+
 
 def rename_block(old_name, new_name):
     if check_name(old_name) and check_name(new_name):
@@ -374,15 +486,17 @@ def rename_block(old_name, new_name):
         save(activity, act)
         system('sudo cp ' + act + ' ' + root_act)
 
+
 def update_block(name):
     if check_name(name):
         cp = get_cp(name)
         try:
             domains = load(cp)
-        except:
+        except BaseException:
             domains = set()
         new_block(name, domains)
         update_hosts()
+
 
 def set_active(name, on):
     if check_name(name):
@@ -391,6 +505,7 @@ def set_active(name, on):
         save(activity, act)
         system('sudo cp ' + act + ' ' + root_act)
         update_block(name)
+
 
 def see_active(search='*'):
     search = search.replace('*', '.')
@@ -407,21 +522,25 @@ def see_active(search='*'):
             blocking = 'Unblocked'
         print(' - ' + name + space * '.' + blocking)
 
+
 def enable():
     activity = get_activity()
     for name in list(activity.keys()):
         set_active(name, True)
+
 
 def disable():
     activity = get_activity()
     for name in list(activity.keys()):
         set_active(name, False)
 
+
 def update_hosts():
     if debug:
         os.system('sudo hblock root-update ' + act + ' --debug')
     else:
         os.system('sudo hblock root-update ' + act)
+
 
 def root_updater(act_path):
     activity = load(act_path)
@@ -448,12 +567,14 @@ def root_updater(act_path):
     hosts.write(h_string)
     hosts.close()
 
+
 def lock(m, h, d):
     delta = datetime.timedelta(minutes=m, hours=h, days=d)
     now = datetime.datetime.now()
     unlock_time = now + delta
     if check_time(time=unlock_time):
         save_time(unlock_time)
+
 
 def when_unlock():
     if check_time(message=False):
@@ -463,25 +584,43 @@ def when_unlock():
         print('Blocks to unlock at ' + str(unlock) + '.')
         print('The current time is ' + str(datetime.datetime.now()) + '.')
 
+
 command = sys.argv[1:]
+
+
 def commands():
     if command[0] == 'active' or command[0] == '-a':
         try:
             see_active(command[1])
-        except:
+        except BaseException:
             see_active()
     elif command[0] == 'add':
         name = command[1]
         add_domains = command[2:]
         add_to_block(name, add_domains)
-        print('Added ' + plural(len(expand_domains(add_domains)), 'domain') + ' to ' + name + '.')
+        print('Added ' +
+              plural(len(expand_domains(add_domains)), 'domain') +
+              ' to ' +
+              name +
+              '.')
     elif command[0] == 'remove' or command[0] == '-r':
         if check_time():
             name = command[1]
             rem_domains = command[2:]
-            if require_keyword('Are you sure you want to remove ' + plural(len(expand_domains(rem_domains)), 'domain') + ' from ' + name + '? '):
+            if require_keyword('Are you sure you want to remove ' +
+                               plural(len(expand_domains(rem_domains)), 'domain') +
+                               ' from ' +
+                               name +
+                               '? '):
                 rem_from_block(name, rem_domains)
-                print('Removed ' + plural(len(rem_domains), 'domain') + ' from ' + name + '.')
+                print(
+                    'Removed ' +
+                    plural(
+                        len(rem_domains),
+                        'domain') +
+                    ' from ' +
+                    name +
+                    '.')
     elif command[0] == 'show' or command[0] == '-s':
         if command[1] == 'all' or command[1] == '*':
             see_all()
@@ -505,18 +644,25 @@ def commands():
         name = command[1]
         domains = expand_domains(command[2:])
         new_block(name, domains)
-        print('Created ' + name + ' with ' + plural(len(expand_domains(domains)), 'domain') + ' in it.')
+        print('Created ' + name + ' with ' +
+              plural(len(expand_domains(domains)), 'domain') + ' in it.')
     elif command[0] == 'delete' or command[0] == '-d':
         if check_time():
             name = command[1]
-            if require_keyword('Are you sure you want to delete ' + name + '? '):
+            if require_keyword(
+                    'Are you sure you want to delete ' + name + '? '):
                 print('Deleting ' + name + '.')
                 delete_block(name)
     elif command[0] == 'rename':
         if check_time():
             old_name = command[1]
             new_name = command[2]
-            if require_keyword('Are you sure you want to rename ' + old_name + ' to ' + new_name + '? '):
+            if require_keyword(
+                'Are you sure you want to rename ' +
+                old_name +
+                ' to ' +
+                new_name +
+                    '? '):
                 rename_block(old_name, new_name)
                 print('Renamed ' + old_name + ' to ' + new_name + '.')
     elif command[0] == 'setup':
@@ -525,7 +671,8 @@ def commands():
         print('Setup complete.')
     elif command[0] == 'reset':
         if check_time:
-            if require_keyword('Are you sure you want to reset your entire hBlock profile? '):
+            if require_keyword(
+                    'Are you sure you want to reset your entire hBlock profile? '):
                 print('Attempting reset.')
                 reset()
                 print('Reset complete.')
@@ -540,9 +687,12 @@ def commands():
             print('Enabled ' + plural(len(get_activity().keys()), 'block list') + '.')
     elif command[0] == 'disable':
         if check_time():
-            if require_keyword('Are you sure you want to disable ' + plural(len(get_activity().keys()), 'block list') + '? '):
+            if require_keyword('Are you sure you want to disable ' +
+                               plural(len(get_activity().keys()), 'block list') + '? '):
                 disable()
-                print('Disabled ' + plural(len(get_activity().keys()), 'block list') + '.')
+                print('Disabled ' +
+                      plural(len(get_activity().keys()), 'block list') +
+                      '.')
     elif command[0] == 'import' or command[0] == '-i':
         if check_time():
             name = command[1]
@@ -578,17 +728,20 @@ def commands():
         lock(m, h, d)
         print('Locking until ' + str(get_unlock()) + '.')
     elif command[0] == 'load' or command[0] == '-l':
-        if check_block(get_default()) or require_keyword('Are you sure you want to load your default profile? '):
+        if check_block(get_default()) or require_keyword(
+                'Are you sure you want to load your default profile? '):
             load_default()
             print('Loaded default profile.')
     elif command[0] == 'save':
         if check_time():
-            if require_keyword('Are you sure you want to save your current profile as the default? '):
+            if require_keyword(
+                    'Are you sure you want to save your current profile as the default? '):
                 save_default()
                 print('Saved default profile.')
     elif command[0] == 'refresh':
         if check_time():
-            if require_keyword('Are you sure you want to reset your default profile? '):
+            if require_keyword(
+                    'Are you sure you want to reset your default profile? '):
                 reset_default()
                 print('Reset default profile.')
     elif command[0] == 'time' or command[0] == '-t':
@@ -622,21 +775,23 @@ def commands():
             ' - load....................................Loads default profile to current activity.\n' +
             " - lock [number] [m/h/d]...................Locks current profile so it can't be changed for\n" +
             "                                           specified time.\n" +
-            " - keyword.................................Sets unblock keyword. Use 'random' or an integer to\n" + 
+            " - keyword.................................Sets unblock keyword. Use 'random' or an integer to\n" +
             "                                           have it be different every time.\n" +
             ' - time....................................See when hBlock is scheduled to unlock.\n' +
             ' - setup...................................Automatically sets up hblock on first install.\n' +
             ' - reset...................................Reset hblock to its default state.\n' +
             ' - update..................................Forces update of hosts file.\n' +
-            " - import [block list] [path]..............Imports block list with specified name Use 'profile'\n" + 
+            " - import [block list] [path]..............Imports block list with specified name Use 'profile'\n" +
             "                                           to import everything.\n" +
-            " - export [block list] [path]..............Exports block list to specified path. Use 'profile'\n" + 
+            " - export [block list] [path]..............Exports block list to specified path. Use 'profile'\n" +
             "                                           to export everything.\n" +
-            ' - help....................................Shows available commands.'
-        )
+            ' - help....................................Shows available commands.')
     else:
-        print("Invalid command. Try entering 'hblock help' to see available commands.\n" +
-        "If you think you entered a valid command, try running with the '--debug' flag at the end.")
+        print(
+            "Invalid command. Try entering 'hblock help' to see available commands.\n" +
+            "If you think you entered a valid command, try running with the '--debug' flag at the end.")
+
+
 if command[-1] == '--debug':
     debug = True
     command = command[:-1]
@@ -645,6 +800,7 @@ if command[-1] == '--debug':
 else:
     try:
         commands()
-    except:
-        print("Invalid command. Try entering 'hblock help' to see available commands.\n" +
-        "If you think you entered a valid command, try running with the '--debug' flag at the end.")
+    except BaseException:
+        print(
+            "Invalid command. Try entering 'hblock help' to see available commands.\n" +
+            "If you think you entered a valid command, try running with the '--debug' flag at the end.")
