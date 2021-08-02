@@ -148,7 +148,7 @@ def check_time(message=True, time=None):
         return free
     elif message:
         print('Cannot complete operation. Blocks are locked until ' +
-              str(datetime.datetime.now()) + '. Try again then.')
+              str(unlock) + '. Try again then.')
         return free
     else:
         return free
