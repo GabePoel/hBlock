@@ -18,81 +18,35 @@ act = os.path.join(base, 'act.pkl')
 defs = os.path.join(base, 'def.pkl')
 pas = os.path.join(base, 'pas.pkl')
 tim = os.path.join(base, 'tim.pkl')
+stp = os.path.join(base, 'stp.pkl')
 wp = os.path.join(usr, 'local', 'bin', 'block-keywords')
 root_base = os.path.join(usr, 'share', 'hBlock')
 root_act = os.path.join(root_base, 'act.pkl')
 debug = False
 
 reserved = {'profile', '*', 'all'}
-allowed = {
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-    'f',
-    'g',
-    'h',
-    'i',
-    'j',
-    'k',
-    'l',
-    'm',
-    'n',
-    'o',
-    'p',
-    'q',
-    'r',
-    's',
-    't',
-    'u',
-    'v',
-    'w',
-    'x',
-    'y',
-    'z',
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-    'L',
-    'M',
-    'N',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
-    'W',
-    'X',
-    'Y',
-    'Z',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9,',
-    '0',
-    '-',
-    '_',
-    ' '}
-
+allowed = {'-', '_', ' '}
+for i in range(65, 91):
+    allowed.add(chr(i))
+    allowed.add(chr(i).lower())
+for i in range(9):
+    allowed.add(str(i))
 
 def import_list(fp):
+    """
+    Import a plaintext document as a list of strings where each item is a line
+    of the document.
+
+    Parameters
+    ----------
+    fp : pathlike
+        File path of the document to read.
+
+    Returns
+    -------
+    list
+        List of strings of the lines of the document.
+    """
     f = open(fp, 'r')
     l = f.read().split("\n")
     f.close()
@@ -103,6 +57,19 @@ words = import_list(wp)
 
 
 def get_words(n=1):
+    """
+    Provides a string of random words.
+
+    Parameters
+    ----------
+    n : int, optional
+        Number of words to list, by default 1.
+
+    Returns
+    -------
+    str
+        String of the words separated by spaces.
+    """
     string = ''
     for i in range(n):
         j = random.randint(0, 9999)
@@ -112,6 +79,19 @@ def get_words(n=1):
 
 
 def check_name(name):
+    """
+    Checks if the provided block list name is valid.
+
+    Parameters
+    ----------
+    name : str
+        Name of the block list.
+
+    Returns
+    -------
+    bool
+        Whether or not the name is valid.
+    """
     if name in reserved:
         print('Name ' + name + ' is reserved. Please try something else.')
         return False
@@ -126,6 +106,14 @@ def check_name(name):
 
 
 def get_unlock():
+    """
+    Get the time that block lists will unlock.
+
+    Returns
+    -------
+    str
+        The unlock time.
+    """
     try:
         load(tim)
     except BaseException:
@@ -133,13 +121,69 @@ def get_unlock():
     return load(tim)
 
 
+def get_unpause():
+    """
+    Get thetime that block lists will unpause.
+
+    Returns
+    -------
+    str
+        The unpause time.
+    """
+    try:
+        load(stp)
+    except BaseException:
+        save_pause()
+    return load(stp)
+
+
 def save_time(time=None):
+    """
+    Save a time for block lists to unlock.
+
+    Parameters
+    ----------
+    time : str, optional
+        The intended time, by default None. If left as None, will default to
+        the current time.
+    """
     if time is None:
         time = datetime.datetime.now()
     save(time, tim)
 
 
+def save_pause(time=None):
+    """
+    Save a time for block lists to unpause.
+
+    Parameters
+    ----------
+    time : str, optional
+        The intended time, by default None. If left as None, will default to
+        the current time.
+    """
+    if time is None:
+        time = datetime.datetime.now()
+    save(time, stp)
+
+
 def check_time(message=True, time=None):
+    """
+    Check if the time is after the time for block lists to unlock.
+
+    Parameters
+    ----------
+    message : bool, optional
+        Locker passthrough.
+    time : str, optional
+        The intended time, by default None. If left as None, will default to
+        the current time.
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
     unlock = get_unlock()
     if time is None:
         time = datetime.datetime.now()
@@ -155,6 +199,21 @@ def check_time(message=True, time=None):
 
 
 def plural(number, word):
+    """
+    Makes the word plural if need be.
+
+    Parameters
+    ----------
+    number : int
+        First half of output string.
+    word : str
+        Second half of output string.
+
+    Returns
+    -------
+    str
+        Number then word where the word is plural if the number isn't one.
+    """
     if number == 1:
         return str(number) + ' ' + word
     else:
@@ -162,6 +221,9 @@ def plural(number, word):
 
 
 def root_refresh():
+    """
+    Refresh the root blocks from the local blocks.
+    """
     fps = os.listdir(base)
     for p in fps:
         fp = os.path.join(base, p)
@@ -535,6 +597,10 @@ def disable():
         set_active(name, False)
 
 
+def pause():
+    print('This feature is currently a work in progress.')
+
+
 def update_hosts():
     if debug:
         os.system('sudo hblock root-update ' + act + ' --debug')
@@ -727,6 +793,22 @@ def commands():
             m = 0
         lock(m, h, d)
         print('Locking until ' + str(get_unlock()) + '.')
+    elif command[0] == 'pause':
+        time = command[1:]
+        if 'd' in time:
+            d = int(time[time.index('d') - 1])
+        else:
+            d = 0
+        if 'h' in time:
+            h = int(time[time.index('h') - 1])
+        else:
+            h = 0
+        if 'm' in time:
+            m = int(time[time.index('m') - 1])
+        else:
+            m = 0
+        pause(m, h, d)
+        print('Pausing until ' + str(get_unpause()) + '.')
     elif command[0] == 'load' or command[0] == '-l':
         if check_block(get_default()) or require_keyword(
                 'Are you sure you want to load your default profile? '):
@@ -768,6 +850,7 @@ def commands():
             ' - block [block list] [on/off].............Turns the block list on or off.\n' +
             ' - enable..................................Turns on all block lists.\n' +
             ' - disable.................................Turns off all block lists.\n' +
+            ' - pause [number] [m/h/d]..................Pause blocking for specified time.\n'
             ' - new [block list] [domains]..............Makes a new block list with specified domains.\n' +
             ' - delete [block list].....................Deletes block list.\n' +
             ' - rename [block list] [new name]..........Renames block list to the new name.\n' +
