@@ -19,8 +19,8 @@ defs = os.path.join(base, 'def.pkl')
 pas = os.path.join(base, 'pas.pkl')
 tim = os.path.join(base, 'tim.pkl')
 stp = os.path.join(base, 'stp.pkl')
-wp = os.path.join(usr, 'local', 'bin', 'block-keywords')
-root_base = os.path.join(usr, 'share', 'hBlock')
+wp = os.path.join(etc, 'hBlock', 'block-keywords')
+root_base = os.path.join(etc, 'hBlock')
 root_act = os.path.join(root_base, 'act.pkl')
 debug = False
 

@@ -4,20 +4,21 @@
 CWD=$(pwd)
 cp $CWD/hblock /home/*/.local/bin/
 cp $CWD/block-keywords /home/*/.local/bin/
+cp $CWD/hblock-direct /home/*/.local/bin/
 
 # Try to create hBlock directory.
 # Don't worry if it already exists.
-sudo mkdir /usr/share/hBlock
+sudo mkdir /etc/hBlock
 
 # Move hBlock scripts and reference files to root directories.
-sudo cp $CWD/hblock /usr/local/bin/
-sudo cp $CWD/block-keywords /usr/local/bin/
-sudo cp $CWD/hblock-direct /usr/local/bin/
+# sudo cp $CWD/hblock /usr/local/bin/
+sudo cp $CWD/block-keywords /etc/hBlock/
+# sudo cp $CWD/hblock-direct /usr/local/bin/
 
 # Make all hBlock scripts executable.
 chmod +x /home/*/.local/bin/hblock
-sudo chmod +x /usr/local/bin/hblock
-sudo chmod +x /usr/local/bin/hblock-direct
+# sudo chmod +x /usr/local/bin/hblock
+chmod +x /home/*/.local/bin/hblock-direct
 
 # Try to fix python path.
 # Don't worry if it's already linked.
