@@ -603,9 +603,9 @@ def pause():
 
 def update_hosts():
     if debug:
-        os.system('sudo hblock root-update ' + act + ' --debug')
+        os.system('sudo ' + home + '/.local/bin/hblock root-update ' + act + ' --debug')
     else:
-        os.system('sudo hblock root-update ' + act)
+        os.system('sudo ' + home + '/.local/bin/hblock root-update ' + act)
 
 
 def root_updater(act_path):
