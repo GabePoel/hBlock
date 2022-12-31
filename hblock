@@ -845,7 +845,7 @@ def commands():
             ' - active..................................Shows which block lists are active.\n' +
             ' - add [block list] [domains]..............Adds domains to block list.\n' +
             ' - remove [block list] [domains]...........Removes domains from block list.\n' +
-            ' - show [block list].......................Shows all the domains in the block lisFt.\n' +
+            ' - show [block list].......................Shows all the domains in the block list.\n' +
             ' - everything..............................Shows all domains in all block lists.\n' +
             ' - block [block list] [on/off].............Turns the block list on or off.\n' +
             ' - enable..................................Turns on all block lists.\n' +
